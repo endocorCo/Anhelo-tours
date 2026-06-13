@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anhelo Tours GDL — Tours y renta de camionetas en Jalisco</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        display: ['Fraunces', 'serif'],
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+      },
+      colors: {
+        sand: '#FAF8F4',
+      },
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .font-display { font-family: 'Fraunces', serif; }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  .agave-line { stroke-dasharray: 200; stroke-dashoffset: 200; animation: draw 1.6s ease forwards .3s; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .play-btn { transition: transform .3s ease; }
+  .video-card:hover .play-btn { transform: scale(1.12); }
+  :focus-visible { outline: 2px solid #f59e0b; outline-offset: 3px; border-radius: 4px; }
+</style>
+</head>
+<body class="bg-sand text-slate-900 antialiased">
+
+<!-- ============ NAVBAR ============ -->
+<header class="fixed top-0 inset-x-0 z-50 bg-sand/85 backdrop-blur-md border-b border-slate-900/5">
+  <nav class="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="#inicio" class="flex items-center gap-3 group" aria-label="Anhelo Tours GDL inicio">
+      <span class="relative inline-flex flex-col items-center">
+        <svg width="38" height="34" viewBox="0 0 38 34" fill="none" class="overflow-visible">
+          <path d="M5 30 L19 4 L33 30" stroke="#f59e0b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M12.5 22 H25.5" stroke="#f59e0b" stroke-width="3.4" stroke-linecap="round"/>
+          <path class="agave-line" d="M3 33 C12 28, 26 28, 35 33" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        </svg>
+      </span>
+      <span class="leading-tight">
+        <span class="block font-display font-700 text-[17px] tracking-tight" data-i18n="brand">Anhelo Tours</span>
+        <span class="block text-[10px] font-700 tracking-[0.28em] text-amber-600 uppercase">GDL · Jalisco</span>
+      </span>
+    </a>
+
+    <!-- Links -->
+    <div class="hidden lg:flex items-center gap-9 text-sm font-600 text-slate-700">
+      <a href="#destinos" class="hover:text-amber-600 transition-colors" data-i18n="nav_dest">Destinos</a>
+      <a href="#camionetas" class="hover:text-amber-600 transition-colors" data-i18n="nav_vans">Camionetas</a>
+      <a href="#experiencias" class="hover:text-amber-600 transition-colors" data-i18n="nav_exp">Experiencias</a>
+      <a href="#resenas" class="hover:text-amber-600 transition-colors" data-i18n="nav_rev">Reseñas</a>
+      <a href="#contacto" class="hover:text-amber-600 transition-colors" data-i18n="nav_contact">Contacto</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Language toggle -->
+      <div class="flex items-center rounded-full border border-slate-300 p-0.5 text-xs font-700">
+        <button id="lang-es" class="px-3 py-1 rounded-full bg-slate-900 text-white transition-colors" aria-pressed="true">ES</button>
+        <button id="lang-en" class="px-3 py-1 rounded-full text-slate-600 transition-colors" aria-pressed="false">EN</button>
+      </div>
+      <a href="https://wa.me/5213351894857" target="_blank" rel="noopener"
+         class="hidden sm:inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-700 text-sm px-5 py-2.5 rounded-xl shadow-sm transition-colors">
+        <i data-lucide="message-circle" class="w-4 h-4"></i>
+        <span data-i18n="nav_cta">Reservar por WhatsApp</span>
+      </a>
+      <button id="menu-btn" class="lg:hidden p-2 text-slate-800" aria-label="Abrir menú">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-900/5 bg-sand px-5 py-4 space-y-1 text-sm font-600">
+    <a href="#destinos" class="block py-2.5 text-slate-700" data-i18n="nav_dest">Destinos</a>
+    <a href="#camionetas" class="block py-2.5 text-slate-700" data-i18n="nav_vans">Camionetas</a>
+    <a href="#experiencias" class="block py-2.5 text-slate-700" data-i18n="nav_exp">Experiencias</a>
+    <a href="#resenas" class="block py-2.5 text-slate-700" data-i18n="nav_rev">Reseñas</a>
+    <a href="#contacto" class="block py-2.5 text-slate-700" data-i18n="nav_contact">Contacto</a>
+    <a href="https://wa.me/5213351894857" target="_blank" rel="noopener" class="block mt-2 text-center bg-amber-500 text-slate-900 font-700 py-3 rounded-xl" data-i18n="nav_cta">Reservar por WhatsApp</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="inicio" class="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <div class="reveal">
+      <span class="inline-flex items-center gap-2 text-xs font-700 tracking-[0.18em] uppercase text-amber-600 mb-6">
+        <i data-lucide="map-pin" class="w-4 h-4"></i>
+        <span data-i18n="hero_eyebrow">Salidas diarias desde Guadalajara</span>
+      </span>
+      <h1 class="font-display font-700 text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-slate-900">
+        <span data-i18n="hero_title_1">Tu próximo destino en Jalisco</span>
+        <span class="text-amber-500" data-i18n="hero_title_2"> empieza aquí.</span>
+      </h1>
+      <p class="mt-6 text-lg text-slate-600 max-w-xl leading-relaxed" data-i18n="hero_sub">
+        Recorre los pueblos mágicos del estado con la comodidad de un viaje planeado a detalle. Choferes certificados, unidades cuidadas y la libertad de disfrutar sin pensar en el camino.
+      </p>
+      <div class="mt-9 flex flex-col sm:flex-row gap-4">
+        <a href="https://wa.me/5213351894857" target="_blank" rel="noopener"
+           class="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-700 px-7 py-4 rounded-xl shadow-sm transition-colors">
+          <i data-lucide="message-circle" class="w-5 h-5"></i>
+          <span data-i18n="hero_cta1">Arma tu viaje</span>
+        </a>
+        <a href="#destinos"
+           class="inline-flex items-center justify-center gap-2 border border-slate-300 hover:border-slate-900 text-slate-800 font-700 px-7 py-4 rounded-xl transition-colors">
+          <span data-i18n="hero_cta2">Ver destinos</span>
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+      </div>
+      <div class="mt-10 flex items-center gap-8 text-sm">
+        <div>
+          <p class="font-display font-700 text-2xl text-slate-900">+8</p>
+          <p class="text-slate-500" data-i18n="hero_stat1">Años recorriendo Jalisco</p>
+        </div>
+        <div class="h-10 w-px bg-slate-200"></div>
+        <div>
+          <p class="font-display font-700 text-2xl text-slate-900">5.0★</p>
+          <p class="text-slate-500" data-i18n="hero_stat2">Calificación de viajeros</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero image placeholder -->
+    <div class="reveal">
+      <div class="relative aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] rounded-2xl overflow-hidden shadow-sm
+                  bg-gradient-to-br from-amber-200 via-amber-100 to-yellow-50 ring-1 ring-amber-500/10">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-amber-700/70">
+          <i data-lucide="image" class="w-12 h-12 mb-3"></i>
+          <p class="text-sm font-600" data-i18n="hero_ph">Fotografía principal · Paisaje de Jalisco</p>
+        </div>
+        <div class="absolute bottom-5 left-5 right-5 bg-white rounded-xl shadow-sm p-4 flex items-center gap-3">
+          <span class="grid place-items-center w-11 h-11 rounded-xl bg-amber-500 text-slate-900">
+            <i data-lucide="users" class="w-5 h-5"></i>
+          </span>
+          <div class="leading-tight">
+            <p class="text-sm font-700" data-i18n="hero_card_t">Grupos y viajes privados</p>
+            <p class="text-xs text-slate-500" data-i18n="hero_card_s">Unidades de 4 a 19 pasajeros</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DESTINOS ============ -->
+<section id="destinos" class="py-20 sm:py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl mb-14">
+      <span class="text-xs font-700 tracking-[0.18em] uppercase text-amber-600" data-i18n="dest_eyebrow">Destinos estrella</span>
+      <h2 class="mt-3 font-display font-700 text-3xl sm:text-4xl tracking-tight" data-i18n="dest_title">Tres escapadas que vale la pena vivir</h2>
+      <p class="mt-4 text-slate-600 text-lg" data-i18n="dest_sub">Cada salida está pensada para que aproveches el día sin prisas: transporte, ruta y paradas resueltas.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Tequila -->
+      <article class="reveal group rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+        <div class="relative aspect-[4/3] bg-gradient-to-br from-amber-300 to-yellow-100 overflow-hidden">
+          <div class="absolute inset-0 grid place-items-center text-amber-700/60 group-hover:scale-105 transition-transform duration-500">
+            <i data-lucide="wine" class="w-12 h-12"></i>
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-display font-700 text-xl">Tequila</h3>
+          <p class="mt-2 text-slate-600 text-sm leading-relaxed" data-i18n="dest_tequila">Cultura viva entre campos de agave azul. Casas tequileras, catas y el origen de la bebida más emblemática de México.</p>
+        </div>
+      </article>
+
+      <!-- Chapala -->
+      <article class="reveal group rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+        <div class="relative aspect-[4/3] bg-gradient-to-br from-amber-200 to-yellow-50 overflow-hidden">
+          <div class="absolute inset-0 grid place-items-center text-amber-700/60 group-hover:scale-105 transition-transform duration-500">
+            <i data-lucide="waves" class="w-12 h-12"></i>
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-display font-700 text-xl">Chapala</h3>
+          <p class="mt-2 text-slate-600 text-sm leading-relaxed" data-i18n="dest_chapala">El lago más grande de México y un ambiente relajado a la orilla del agua. Malecón, paisajes y comida fresca de ribera.</p>
+        </div>
+      </article>
+
+      <!-- Mazamitla -->
+      <article class="reveal group rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+        <div class="relative aspect-[4/3] bg-gradient-to-br from-amber-300 to-yellow-100 overflow-hidden">
+          <div class="absolute inset-0 grid place-items-center text-amber-700/60 group-hover:scale-105 transition-transform duration-500">
+            <i data-lucide="trees" class="w-12 h-12"></i>
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-display font-700 text-xl">Mazamitla</h3>
+          <p class="mt-2 text-slate-600 text-sm leading-relaxed" data-i18n="dest_mazamitla">Aventura entre bosque alpino y cabañas acogedoras. Clima fresco, senderos y el pueblo mágico de la sierra jalisciense.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAMIONETAS ============ -->
+<section id="camionetas" class="py-20 sm:py-28 bg-slate-950 text-white">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div class="reveal">
+        <span class="text-xs font-700 tracking-[0.18em] uppercase text-amber-400" data-i18n="vans_eyebrow">Renta de camionetas de turismo</span>
+        <h2 class="mt-3 font-display font-700 text-3xl sm:text-4xl tracking-tight" data-i18n="vans_title">Tu propio viaje, a tu ritmo y con respaldo</h2>
+        <p class="mt-4 text-slate-300 text-lg leading-relaxed" data-i18n="vans_sub">Para escapadas particulares, traslados corporativos o eventos especiales. Unidades cómodas con chofer profesional para que solo te preocupes por disfrutar.</p>
+
+        <div class="mt-8 grid sm:grid-cols-3 gap-5">
+          <div class="rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
+            <i data-lucide="shield-check" class="w-7 h-7 text-amber-400"></i>
+            <p class="mt-3 font-700 text-sm" data-i18n="vans_f1_t">Viaje seguro</p>
+            <p class="mt-1 text-xs text-slate-400" data-i18n="vans_f1_s">Unidades en mantenimiento constante y con seguro de viajero.</p>
+          </div>
+          <div class="rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
+            <i data-lucide="user-check" class="w-7 h-7 text-amber-400"></i>
+            <p class="mt-3 font-700 text-sm" data-i18n="vans_f2_t">Chofer certificado</p>
+            <p class="mt-1 text-xs text-slate-400" data-i18n="vans_f2_s">Conductores con experiencia y licencia federal vigente.</p>
+          </div>
+          <div class="rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
+            <i data-lucide="armchair" class="w-7 h-7 text-amber-400"></i>
+            <p class="mt-3 font-700 text-sm" data-i18n="vans_f3_t">Máximo confort</p>
+            <p class="mt-1 text-xs text-slate-400" data-i18n="vans_f3_s">Clima, asientos amplios y espacio de equipaje para el grupo.</p>
+          </div>
+        </div>
+
+        <a href="https://wa.me/5213351894857" target="_blank" rel="noopener"
+           class="mt-9 inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-700 px-7 py-4 rounded-xl transition-colors">
+          <i data-lucide="message-circle" class="w-5 h-5"></i>
+          <span data-i18n="vans_cta">Cotizar mi camioneta</span>
+        </a>
+      </div>
+
+      <div class="reveal">
+        <div class="relative aspect-[4/3] rounded-2xl overflow-hidden ring-1 ring-white/10
+                    bg-gradient-to-br from-amber-500/30 via-amber-400/10 to-slate-900">
+          <div class="absolute inset-0 grid place-items-center text-amber-200/70">
+            <div class="text-center">
+              <i data-lucide="bus" class="w-14 h-14 mx-auto mb-3"></i>
+              <p class="text-sm font-600" data-i18n="vans_ph">Fotografía de la unidad de turismo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCIAS / GALERÍA ============ -->
+<section id="experiencias" class="py-20 sm:py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl mb-14">
+      <span class="text-xs font-700 tracking-[0.18em] uppercase text-amber-600" data-i18n="gal_eyebrow">Experiencias</span>
+      <h2 class="mt-3 font-display font-700 text-3xl sm:text-4xl tracking-tight" data-i18n="gal_title">Momentos de quienes ya viajaron con nosotros</h2>
+      <p class="mt-4 text-slate-600 text-lg" data-i18n="gal_sub">Una muestra de los recorridos, paisajes y grupos que han hecho su viaje con Anhelo Tours.</p>
+    </div>
+
+    <!-- 8 photo placeholders -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <!-- repeated 8 -->
+      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
+        <i data-lucide="image" class="w-8 h-8"></i>
+      </div>
+      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
+        <i data-lucide="image" class="w-8 h-8"></i>
+      </div>
+      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
+        <i data-lucide="image" class="w-8 h-8"></i>
+      </div>
+      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
+        <i data-lucide="image" class="w-8 h-8"></i>
+      </div>
+      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
+        <i data-lucide="image" class="w-8 h-8"></i>
+      </div>
+      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
+        <i data-lucide="image" class="w-8 h-8"></i>
+      </div>
+      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
+        <i data-lucide="image" class="w-8 h-8"></i>
+      </div>
+      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
+        <i data-lucide="image" class="w-8 h-8"></i>
+      </div>
+    </div>
+
+    <!-- 3 video placeholders -->
+    <h3 class="mt-14 mb-6 font-display font-600 text-2xl tracking-tight" data-i18n="gal_videos">En video</h3>
+    <div class="grid sm:grid-cols-3 gap-4">
+      <div class="video-card reveal relative aspect-video rounded-xl bg-slate-900 overflow-hidden ring-1 ring-slate-900/10 cursor-pointer group">
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950"></div>
+        <div class="absolute inset-0 grid place-items-center">
+          <span class="play-btn grid place-items-center w-16 h-16 rounded-full bg-amber-500 text-slate-900 shadow-lg">
+            <i data-lucide="play" class="w-7 h-7 ml-0.5"></i>
+          </span>
+        </div>
+        <span class="absolute bottom-3 left-3 text-xs font-600 text-white/80" data-i18n="gal_v1">Ruta a Tequila</span>
+      </div>
+      <div class="video-card reveal relative aspect-video rounded-xl bg-slate-900 overflow-hidden ring-1 ring-slate-900/10 cursor-pointer group">
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950"></div>
+        <div class="absolute inset-0 grid place-items-center">
+          <span class="play-btn grid place-items-center w-16 h-16 rounded-full bg-amber-500 text-slate-900 shadow-lg">
+            <i data-lucide="play" class="w-7 h-7 ml-0.5"></i>
+          </span>
+        </div>
+        <span class="absolute bottom-3 left-3 text-xs font-600 text-white/80" data-i18n="gal_v2">Día en Chapala</span>
+      </div>
+      <div class="video-card reveal relative aspect-video rounded-xl bg-slate-900 overflow-hidden ring-1 ring-slate-900/10 cursor-pointer group">
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950"></div>
+        <div class="absolute inset-0 grid place-items-center">
+          <span class="play-btn grid place-items-center w-16 h-16 rounded-full bg-amber-500 text-slate-900 shadow-lg">
+            <i data-lucide="play" class="w-7 h-7 ml-0.5"></i>
+          </span>
+        </div>
+        <span class="absolute bottom-3 left-3 text-xs font-600 text-white/80" data-i18n="gal_v3">Aventura en Mazamitla</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESEÑAS ============ -->
+<section id="resenas" class="py-20 sm:py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl mb-14">
+      <span class="text-xs font-700 tracking-[0.18em] uppercase text-amber-600" data-i18n="rev_eyebrow">Lo que dicen en Facebook</span>
+      <h2 class="mt-3 font-display font-700 text-3xl sm:text-4xl tracking-tight" data-i18n="rev_title">Viajeros que repetirían sin dudarlo</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <article class="reveal rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-7 bg-sand">
+        <div class="flex gap-1 text-amber-500 mb-4">
+          <i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i>
+        </div>
+        <p class="text-slate-700 leading-relaxed" data-i18n="rev_1">"Excelente organización en el tour a Tequila. El chofer súper amable y puntual, y la camioneta muy cómoda. Volveríamos a viajar con ellos sin pensarlo."</p>
+        <div class="mt-6 flex items-center gap-3">
+          <span class="grid place-items-center w-10 h-10 rounded-full bg-amber-500 text-slate-900 font-700">MG</span>
+          <div class="leading-tight">
+            <p class="text-sm font-700">María G.</p>
+            <p class="text-xs text-slate-500" data-i18n="rev_via">Reseña en Facebook</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="reveal rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-7 bg-sand">
+        <div class="flex gap-1 text-amber-500 mb-4">
+          <i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i>
+        </div>
+        <p class="text-slate-700 leading-relaxed" data-i18n="rev_2">"Rentamos una camioneta para un evento de la empresa y todo salió perfecto. Servicio profesional de principio a fin, muy recomendados para grupos."</p>
+        <div class="mt-6 flex items-center gap-3">
+          <span class="grid place-items-center w-10 h-10 rounded-full bg-amber-500 text-slate-900 font-700">JR</span>
+          <div class="leading-tight">
+            <p class="text-sm font-700">Jorge R.</p>
+            <p class="text-xs text-slate-500" data-i18n="rev_via">Reseña en Facebook</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="reveal rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-7 bg-sand">
+        <div class="flex gap-1 text-amber-500 mb-4">
+          <i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i>
+        </div>
+        <p class="text-slate-700 leading-relaxed" data-i18n="rev_3">"El viaje a Mazamitla fue increíble, todo bien coordinado y a buen precio. Se nota que conocen muy bien Jalisco. Gracias por una experiencia tan bonita."</p>
+        <div class="mt-6 flex items-center gap-3">
+          <span class="grid place-items-center w-10 h-10 rounded-full bg-amber-500 text-slate-900 font-700">LF</span>
+          <div class="leading-tight">
+            <p class="text-sm font-700">Lucía F.</p>
+            <p class="text-xs text-slate-500" data-i18n="rev_via">Reseña en Facebook</p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="reveal mt-10 text-center">
+      <a href="https://www.facebook.com/AnheloToursGD/reviews/" target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 border-2 border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-700 px-7 py-4 rounded-xl transition-colors">
+        <i data-lucide="facebook" class="w-5 h-5"></i>
+        <span data-i18n="rev_cta">Ver todas las reseñas en Facebook</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section id="contacto" class="py-20 sm:py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16">
+      <!-- info -->
+      <div class="reveal">
+        <span class="text-xs font-700 tracking-[0.18em] uppercase text-amber-600" data-i18n="con_eyebrow">Ubicación y contacto</span>
+        <h2 class="mt-3 font-display font-700 text-3xl sm:text-4xl tracking-tight" data-i18n="con_title">Planeemos tu viaje juntos</h2>
+        <p class="mt-4 text-slate-600 text-lg" data-i18n="con_sub">Escríbenos por WhatsApp para una respuesta rápida o déjanos tus datos y te contactamos.</p>
+
+        <div class="mt-8 space-y-4">
+          <a href="tel:+523351894857" class="flex items-center gap-4 group">
+            <span class="grid place-items-center w-12 h-12 rounded-xl bg-amber-500 text-slate-900"><i data-lucide="phone" class="w-5 h-5"></i></span>
+            <div>
+              <p class="text-xs text-slate-500 uppercase tracking-wide" data-i18n="con_phone">Teléfono</p>
+              <p class="font-700 group-hover:text-amber-600 transition-colors">33 5189 4857</p>
+            </div>
+          </a>
+          <a href="https://wa.me/5213351894857" target="_blank" rel="noopener" class="flex items-center gap-4 group">
+            <span class="grid place-items-center w-12 h-12 rounded-xl bg-amber-500 text-slate-900"><i data-lucide="message-circle" class="w-5 h-5"></i></span>
+            <div>
+              <p class="text-xs text-slate-500 uppercase tracking-wide">WhatsApp</p>
+              <p class="font-700 group-hover:text-amber-600 transition-colors">+52 1 33 5189 4857</p>
+            </div>
+          </a>
+          <div class="flex items-center gap-4">
+            <span class="grid place-items-center w-12 h-12 rounded-xl bg-amber-500 text-slate-900"><i data-lucide="map-pin" class="w-5 h-5"></i></span>
+            <div>
+              <p class="text-xs text-slate-500 uppercase tracking-wide" data-i18n="con_addr">Dirección</p>
+              <p class="font-700">General Genovevo Rivas Guillén 27</p>
+              <p class="text-sm text-slate-500">Guadalajara, México, 44730</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- map placeholder -->
+        <div class="mt-8 rounded-2xl bg-slate-100 ring-1 ring-slate-900/5 h-56 grid place-items-center text-center px-6">
+          <div class="text-slate-500">
+            <i data-lucide="map-pin" class="w-10 h-10 mx-auto mb-3 text-amber-500"></i>
+            <p class="font-600 text-sm" data-i18n="con_map">Mapa de ubicación: General Genovevo Rivas Guillén 27</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- form -->
+      <div class="reveal">
+        <div class="rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm p-7 sm:p-9">
+          <h3 class="font-display font-700 text-2xl mb-6" data-i18n="form_title">Cuéntanos tu plan</h3>
+          <div class="space-y-5">
+            <div>
+              <label for="f-name" class="block text-sm font-600 text-slate-700 mb-1.5" data-i18n="form_name">Nombre</label>
+              <input id="f-name" type="text" class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition" placeholder="Tu nombre">
+            </div>
+            <div>
+              <label for="f-email" class="block text-sm font-600 text-slate-700 mb-1.5" data-i18n="form_email">Correo</label>
+              <input id="f-email" type="email" class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition" placeholder="tucorreo@ejemplo.com">
+            </div>
+            <div>
+              <label for="f-msg" class="block text-sm font-600 text-slate-700 mb-1.5" data-i18n="form_msg">Mensaje</label>
+              <textarea id="f-msg" rows="4" class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition resize-none" placeholder="¿A dónde quieres ir y cuántas personas son?"></textarea>
+            </div>
+            <button id="f-submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-700 py-4 rounded-xl transition-colors" data-i18n="form_btn">Enviar mensaje</button>
+            <p class="text-center text-xs text-slate-500" data-i18n="form_note">También puedes escribirnos directo por WhatsApp para una respuesta inmediata.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-slate-950 text-slate-300 pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <svg width="34" height="30" viewBox="0 0 38 34" fill="none">
+            <path d="M5 30 L19 4 L33 30" stroke="#f59e0b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12.5 22 H25.5" stroke="#f59e0b" stroke-width="3.4" stroke-linecap="round"/>
+            <path d="M3 33 C12 28, 26 28, 35 33" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span class="font-display font-700 text-white text-lg">Anhelo Tours GDL</span>
+        </div>
+        <p class="text-sm text-slate-400 max-w-xs" data-i18n="foot_about">Tours diarios y renta de camionetas de turismo por los destinos mágicos de Jalisco.</p>
+      </div>
+
+      <div>
+        <p class="font-700 text-white mb-4" data-i18n="foot_nav">Navegación</p>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#destinos" class="hover:text-amber-400 transition-colors" data-i18n="nav_dest">Destinos</a></li>
+          <li><a href="#camionetas" class="hover:text-amber-400 transition-colors" data-i18n="nav_vans">Camionetas</a></li>
+          <li><a href="#experiencias" class="hover:text-amber-400 transition-colors" data-i18n="nav_exp">Experiencias</a></li>
+          <li><a href="#contacto" class="hover:text-amber-400 transition-colors" data-i18n="nav_contact">Contacto</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="font-700 text-white mb-4" data-i18n="foot_contact">Contacto</p>
+        <ul class="space-y-2 text-sm">
+          <li>33 5189 4857</li>
+          <li>+52 1 33 5189 4857</li>
+          <li class="text-slate-400">General Genovevo Rivas Guillén 27, Guadalajara, 44730</li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="font-700 text-white mb-4" data-i18n="foot_social">Síguenos</p>
+        <div class="flex gap-3">
+          <a href="https://www.instagram.com/anhelotoursgdl/" target="_blank" rel="noopener" aria-label="Instagram"
+             class="grid place-items-center w-11 h-11 rounded-xl bg-white/5 ring-1 ring-white/10 hover:bg-amber-500 hover:text-slate-900 transition-colors">
+            <i data-lucide="instagram" class="w-5 h-5"></i>
+          </a>
+          <a href="https://www.facebook.com/AnheloToursGD/" target="_blank" rel="noopener" aria-label="Facebook"
+             class="grid place-items-center w-11 h-11 rounded-xl bg-white/5 ring-1 ring-white/10 hover:bg-amber-500 hover:text-slate-900 transition-colors">
+            <i data-lucide="facebook" class="w-5 h-5"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="pt-8 text-center text-xs text-slate-500">
+      © <span id="year"></span> Anhelo Tours GDL. <span data-i18n="foot_rights">Todos los derechos reservados.</span>
+    </p>
+  </div>
+</footer>
+
+<!-- ============ FLOATING WHATSAPP ============ -->
+<a href="https://wa.me/5213351894857" target="_blank" rel="noopener" aria-label="WhatsApp"
+   class="fixed bottom-5 right-5 z-50 grid place-items-center w-14 h-14 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-900 shadow-lg transition-colors">
+  <i data-lucide="message-circle" class="w-7 h-7"></i>
+</a>
+
+<script>
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Icons
+  lucide.createIcons();
+
+  // Mobile menu
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Form (demo)
+  document.getElementById('f-submit').addEventListener('click', () => {
+    const name = document.getElementById('f-name').value.trim();
+    const msg = (translations[currentLang].form_sent || 'Gracias {name}, te contactaremos pronto.').replace('{name}', name || '');
+    alert(msg);
+  });
+
+  // ===== i18n =====
+  const translations = {
+    es: {
+      brand: "Anhelo Tours", nav_dest: "Destinos", nav_vans: "Camionetas", nav_exp: "Experiencias", nav_rev: "Reseñas", nav_contact: "Contacto", nav_cta: "Reservar por WhatsApp",
+      hero_eyebrow: "Salidas diarias desde Guadalajara",
+      hero_title_1: "Tu próximo destino en Jalisco", hero_title_2: " empieza aquí.",
+      hero_sub: "Recorre los pueblos mágicos del estado con la comodidad de un viaje planeado a detalle. Choferes certificados, unidades cuidadas y la libertad de disfrutar sin pensar en el camino.",
+      hero_cta1: "Arma tu viaje", hero_cta2: "Ver destinos",
+      hero_stat1: "Años recorriendo Jalisco", hero_stat2: "Calificación de viajeros",
+      hero_ph: "Fotografía principal · Paisaje de Jalisco",
+      hero_card_t: "Grupos y viajes privados", hero_card_s: "Unidades de 4 a 19 pasajeros",
+      dest_eyebrow: "Destinos estrella", dest_title: "Tres escapadas que vale la pena vivir",
+      dest_sub: "Cada salida está pensada para que aproveches el día sin prisas: transporte, ruta y paradas resueltas.",
+      dest_tequila: "Cultura viva entre campos de agave azul. Casas tequileras, catas y el origen de la bebida más emblemática de México.",
+      dest_chapala: "El lago más grande de México y un ambiente relajado a la orilla del agua. Malecón, paisajes y comida fresca de ribera.",
+      dest_mazamitla: "Aventura entre bosque alpino y cabañas acogedoras. Clima fresco, senderos y el pueblo mágico de la sierra jalisciense.",
+      vans_eyebrow: "Renta de camionetas de turismo", vans_title: "Tu propio viaje, a tu ritmo y con respaldo",
+      vans_sub: "Para escapadas particulares, traslados corporativos o eventos especiales. Unidades cómodas con chofer profesional para que solo te preocupes por disfrutar.",
+      vans_f1_t: "Viaje seguro", vans_f1_s: "Unidades en mantenimiento constante y con seguro de viajero.",
+      vans_f2_t: "Chofer certificado", vans_f2_s: "Conductores con experiencia y licencia federal vigente.",
+      vans_f3_t: "Máximo confort", vans_f3_s: "Clima, asientos amplios y espacio de equipaje para el grupo.",
+      vans_cta: "Cotizar mi camioneta", vans_ph: "Fotografía de la unidad de turismo",
+      gal_eyebrow: "Experiencias", gal_title: "Momentos de quienes ya viajaron con nosotros",
+      gal_sub: "Una muestra de los recorridos, paisajes y grupos que han hecho su viaje con Anhelo Tours.",
+      gal_videos: "En video", gal_v1: "Ruta a Tequila", gal_v2: "Día en Chapala", gal_v3: "Aventura en Mazamitla",
+      rev_eyebrow: "Lo que dicen en Facebook", rev_title: "Viajeros que repetirían sin dudarlo",
+      rev_1: "\"Excelente organización en el tour a Tequila. El chofer súper amable y puntual, y la camioneta muy cómoda. Volveríamos a viajar con ellos sin pensarlo.\"",
+      rev_2: "\"Rentamos una camioneta para un evento de la empresa y todo salió perfecto. Servicio profesional de principio a fin, muy recomendados para grupos.\"",
+      rev_3: "\"El viaje a Mazamitla fue increíble, todo bien coordinado y a buen precio. Se nota que conocen muy bien Jalisco. Gracias por una experiencia tan bonita.\"",
+      rev_via: "Reseña en Facebook", rev_cta: "Ver todas las reseñas en Facebook",
+      con_eyebrow: "Ubicación y contacto", con_title: "Planeemos tu viaje juntos",
+      con_sub: "Escríbenos por WhatsApp para una respuesta rápida o déjanos tus datos y te contactamos.",
+      con_phone: "Teléfono", con_addr: "Dirección", con_map: "Mapa de ubicación: General Genovevo Rivas Guillén 27",
+      form_title: "Cuéntanos tu plan", form_name: "Nombre", form_email: "Correo", form_msg: "Mensaje",
+      form_btn: "Enviar mensaje", form_note: "También puedes escribirnos directo por WhatsApp para una respuesta inmediata.",
+      form_sent: "Gracias {name}, te contactaremos pronto.",
+      foot_about: "Tours diarios y renta de camionetas de turismo por los destinos mágicos de Jalisco.",
+      foot_nav: "Navegación", foot_contact: "Contacto", foot_social: "Síguenos", foot_rights: "Todos los derechos reservados."
+    },
+    en: {
+      brand: "Anhelo Tours", nav_dest: "Destinations", nav_vans: "Vans", nav_exp: "Experiences", nav_rev: "Reviews", nav_contact: "Contact", nav_cta: "Book on WhatsApp",
+      hero_eyebrow: "Daily departures from Guadalajara",
+      hero_title_1: "Your next destination in Jalisco", hero_title_2: " starts here.",
+      hero_sub: "Explore the state's magical towns with the comfort of a carefully planned trip. Certified drivers, well-kept vehicles, and the freedom to enjoy the ride.",
+      hero_cta1: "Plan your trip", hero_cta2: "See destinations",
+      hero_stat1: "Years exploring Jalisco", hero_stat2: "Traveler rating",
+      hero_ph: "Main photo · Jalisco landscape",
+      hero_card_t: "Groups and private trips", hero_card_s: "Vehicles for 4 to 19 passengers",
+      dest_eyebrow: "Featured destinations", dest_title: "Three escapes worth living",
+      dest_sub: "Every trip is designed so you can enjoy the day with no rush: transport, route, and stops all handled.",
+      dest_tequila: "Living culture among blue agave fields. Tequila houses, tastings, and the birthplace of Mexico's most iconic drink.",
+      dest_chapala: "Mexico's largest lake and a relaxed atmosphere by the water. Boardwalk, scenery, and fresh lakeside food.",
+      dest_mazamitla: "Adventure among alpine forest and cozy cabins. Cool weather, trails, and the magical town of the Jalisco highlands.",
+      vans_eyebrow: "Tourism van rentals", vans_title: "Your own trip, at your pace and with backup",
+      vans_sub: "For private getaways, corporate transfers, or special events. Comfortable vehicles with a professional driver so you only worry about enjoying.",
+      vans_f1_t: "Safe travel", vans_f1_s: "Vehicles under constant maintenance and with traveler insurance.",
+      vans_f2_t: "Certified driver", vans_f2_s: "Experienced drivers with a valid federal license.",
+      vans_f3_t: "Maximum comfort", vans_f3_s: "A/C, spacious seats, and luggage room for the whole group.",
+      vans_cta: "Quote my van", vans_ph: "Photo of the tourism vehicle",
+      gal_eyebrow: "Experiences", gal_title: "Moments from those who already traveled with us",
+      gal_sub: "A sample of the routes, landscapes, and groups that have made their trip with Anhelo Tours.",
+      gal_videos: "On video", gal_v1: "Route to Tequila", gal_v2: "A day in Chapala", gal_v3: "Adventure in Mazamitla",
+      rev_eyebrow: "What they say on Facebook", rev_title: "Travelers who would go again without hesitation",
+      rev_1: "\"Excellent organization on the Tequila tour. The driver was super friendly and punctual, and the van very comfortable. We'd travel with them again without thinking twice.\"",
+      rev_2: "\"We rented a van for a company event and everything went perfectly. Professional service from start to finish, highly recommended for groups.\"",
+      rev_3: "\"The trip to Mazamitla was incredible, all well coordinated and fairly priced. You can tell they know Jalisco very well. Thanks for such a lovely experience.\"",
+      rev_via: "Review on Facebook", rev_cta: "See all reviews on Facebook",
+      con_eyebrow: "Location and contact", con_title: "Let's plan your trip together",
+      con_sub: "Message us on WhatsApp for a quick reply or leave your details and we'll reach out.",
+      con_phone: "Phone", con_addr: "Address", con_map: "Location map: General Genovevo Rivas Guillén 27",
+      form_title: "Tell us your plan", form_name: "Name", form_email: "Email", form_msg: "Message",
+      form_btn: "Send message", form_note: "You can also message us directly on WhatsApp for an immediate reply.",
+      form_sent: "Thanks {name}, we'll be in touch soon.",
+      foot_about: "Daily tours and tourism van rentals across the magical destinations of Jalisco.",
+      foot_nav: "Navigation", foot_contact: "Contact", foot_social: "Follow us", foot_rights: "All rights reserved."
+    }
+  };
+
+  let currentLang = 'es';
+  const placeholders = {
+    'f-name': { es: 'Tu nombre', en: 'Your name' },
+    'f-email': { es: 'tucorreo@ejemplo.com', en: 'youremail@example.com' },
+    'f-msg': { es: '¿A dónde quieres ir y cuántas personas son?', en: 'Where do you want to go and how many people?' }
+  };
+
+  function setLang(lang) {
+    currentLang = lang;
+    const t = translations[lang];
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined) el.textContent = t[key];
+    });
+    Object.keys(placeholders).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.placeholder = placeholders[id][lang];
+    });
+    const esBtn = document.getElementById('lang-es');
+    const enBtn = document.getElementById('lang-en');
+    const active = ['bg-slate-900','text-white'];
+    const inactive = ['text-slate-600'];
+    if (lang === 'es') {
+      esBtn.classList.add(...active); esBtn.classList.remove(...inactive); esBtn.setAttribute('aria-pressed','true');
+      enBtn.classList.remove(...active); enBtn.classList.add(...inactive); enBtn.setAttribute('aria-pressed','false');
+    } else {
+      enBtn.classList.add(...active); enBtn.classList.remove(...inactive); enBtn.setAttribute('aria-pressed','true');
+      esBtn.classList.remove(...active); esBtn.classList.add(...inactive); esBtn.setAttribute('aria-pressed','false');
+    }
+  }
+  document.getElementById('lang-es').addEventListener('click', () => setLang('es'));
+  document.getElementById('lang-en').addEventListener('click', () => setLang('en'));
+</script>
+</body>
+</html>
