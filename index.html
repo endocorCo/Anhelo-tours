@@ -25,19 +25,143 @@ tailwind.config = {
 }
 </script>
 <style>
+  :root {
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    * { animation: none !important; transition: none !important; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   }
   body { font-family: 'Plus Jakarta Sans', sans-serif; }
   .font-display { font-family: 'Fraunces', serif; }
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s var(--ease-out-quint), transform 0.7s var(--ease-out-quint);
+  }
   .reveal.in { opacity: 1; transform: none; }
-  .agave-line { stroke-dasharray: 200; stroke-dashoffset: 200; animation: draw 1.6s ease forwards .3s; }
-  @keyframes draw { to { stroke-dashoffset: 0; } }
-  .play-btn { transition: transform .3s ease; }
-  .video-card:hover .play-btn { transform: scale(1.12); }
+
+  /* ── Hero entrance sequence ── */
+  .hero-seq {
+    opacity: 0;
+    transform: translateY(36px);
+    animation: hero-in 0.75s var(--ease-out-expo) forwards;
+  }
+  @keyframes hero-in {
+    to { opacity: 1; transform: none; }
+  }
+  .hero-seq:nth-child(1) { animation-delay: 0.05s; }
+  .hero-seq:nth-child(2) { animation-delay: 0.18s; }
+  .hero-seq:nth-child(3) { animation-delay: 0.3s; }
+  .hero-seq:nth-child(4) { animation-delay: 0.42s; }
+  .hero-seq:nth-child(5) { animation-delay: 0.52s; }
+  .hero-img-seq {
+    opacity: 0;
+    transform: translateX(28px) scale(0.98);
+    animation: hero-img-in 0.9s var(--ease-out-expo) 0.25s forwards;
+  }
+  @keyframes hero-img-in {
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ── Float card ── */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-7px); }
+  }
+  .float-card { animation: float 4.5s ease-in-out infinite; }
+
+  /* ── WhatsApp pulse ring ── */
+  @keyframes wa-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(245,158,11,0.55); }
+    65%  { box-shadow: 0 0 0 16px rgba(245,158,11,0); }
+    100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+  }
+  .wa-pulse { animation: wa-ring 2.8s ease-out infinite; }
+
+  /* ── Play button hover ring ── */
+  .play-btn { transition: transform 0.3s var(--ease-out-quint); }
+  .video-card:hover .play-btn { transform: scale(1.1); }
+  @keyframes play-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(245,158,11,0.45); }
+    70%  { box-shadow: 0 0 0 18px rgba(245,158,11,0); }
+    100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+  }
+  .video-card:hover .play-btn { animation: play-ring 1.3s ease-out infinite; }
+
+  /* ── Button micro-interactions ── */
+  .btn-primary {
+    transition: background-color 0.2s, transform 0.15s var(--ease-out-quint), box-shadow 0.2s;
+  }
+  .btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,158,11,0.35); }
+  .btn-primary:active { transform: scale(0.97) translateY(0); box-shadow: none; }
+  .btn-secondary {
+    transition: border-color 0.2s, background-color 0.2s, color 0.2s, transform 0.15s var(--ease-out-quint);
+  }
+  .btn-secondary:hover  { transform: translateY(-2px); }
+  .btn-secondary:active { transform: scale(0.97); }
+
+  /* ── Destination card hover lift ── */
+  .dest-card {
+    transition: transform 0.35s var(--ease-out-quint), box-shadow 0.35s var(--ease-out-quint);
+  }
+  .dest-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,0,0,0.1); }
+
+  /* ── Review card hover ── */
+  .rev-card {
+    transition: transform 0.3s var(--ease-out-quint), box-shadow 0.3s;
+  }
+  .rev-card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(0,0,0,0.07); }
+
+  /* ── Feature cards (vans) ── */
+  .feat-card {
+    transition: background 0.3s, transform 0.3s var(--ease-out-quint), box-shadow 0.3s;
+  }
+  .feat-card:hover { background: rgba(245,158,11,0.1); transform: translateY(-3px); }
+
+  /* ── Navbar scroll state ── */
+  header { transition: box-shadow 0.3s, background-color 0.3s; }
+  header.scrolled { box-shadow: 0 1px 18px rgba(0,0,0,0.07); background-color: rgba(250,248,244,0.97); }
+
+  /* ── Nav link underline slide ── */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 0; height: 2px;
+    background: #f59e0b;
+    transition: width 0.25s var(--ease-out-quint);
+  }
+  .nav-link:hover::after { width: 100%; }
+
+  /* ── Social icon hover ── */
+  .social-icon {
+    transition: background 0.2s, color 0.2s, transform 0.25s var(--ease-out-quint);
+  }
+  .social-icon:hover { transform: translateY(-3px) scale(1.08); }
+
+  /* ── Stat count-up (initial hidden) ── */
+  .stat-num { display: inline-block; }
+
+  /* ── Gallery item hover ── */
+  .gallery-item {
+    transition: transform 0.35s var(--ease-out-quint), box-shadow 0.35s;
+    cursor: pointer;
+  }
+  .gallery-item:hover { transform: scale(1.04); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+
+  /* ── Contact icon hover ── */
+  .contact-icon {
+    transition: transform 0.25s var(--ease-out-quint), background 0.2s;
+  }
+  .contact-icon:hover .icon-bg { background: #d97706; }
+
   :focus-visible { outline: 2px solid #f59e0b; outline-offset: 3px; border-radius: 4px; }
 </style>
 </head>
@@ -56,11 +180,11 @@ tailwind.config = {
 
     <!-- Links -->
     <div class="hidden lg:flex items-center gap-9 text-sm font-600 text-slate-700">
-      <a href="#destinos" class="hover:text-amber-600 transition-colors" data-i18n="nav_dest">Destinos</a>
-      <a href="#camionetas" class="hover:text-amber-600 transition-colors" data-i18n="nav_vans">Camionetas</a>
-      <a href="#experiencias" class="hover:text-amber-600 transition-colors" data-i18n="nav_exp">Experiencias</a>
-      <a href="#resenas" class="hover:text-amber-600 transition-colors" data-i18n="nav_rev">Reseñas</a>
-      <a href="#contacto" class="hover:text-amber-600 transition-colors" data-i18n="nav_contact">Contacto</a>
+      <a href="#destinos" class="nav-link hover:text-amber-600 transition-colors" data-i18n="nav_dest">Destinos</a>
+      <a href="#camionetas" class="nav-link hover:text-amber-600 transition-colors" data-i18n="nav_vans">Camionetas</a>
+      <a href="#experiencias" class="nav-link hover:text-amber-600 transition-colors" data-i18n="nav_exp">Experiencias</a>
+      <a href="#resenas" class="nav-link hover:text-amber-600 transition-colors" data-i18n="nav_rev">Reseñas</a>
+      <a href="#contacto" class="nav-link hover:text-amber-600 transition-colors" data-i18n="nav_contact">Contacto</a>
     </div>
 
     <div class="flex items-center gap-3">
@@ -94,52 +218,52 @@ tailwind.config = {
 <!-- ============ HERO ============ -->
 <section id="inicio" class="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
   <div class="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-    <div class="reveal">
-      <span class="inline-flex items-center gap-2 text-xs font-700 tracking-[0.18em] uppercase text-amber-600 mb-6">
+    <div>
+      <span class="hero-seq inline-flex items-center gap-2 text-xs font-700 tracking-[0.18em] uppercase text-amber-600 mb-6">
         <i data-lucide="map-pin" class="w-4 h-4"></i>
         <span data-i18n="hero_eyebrow">Salidas diarias desde Guadalajara</span>
       </span>
-      <h1 class="font-display font-700 text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-slate-900">
+      <h1 class="hero-seq font-display font-700 text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-slate-900">
         <span data-i18n="hero_title_1">Tu próximo destino en Jalisco</span>
         <span class="text-amber-500" data-i18n="hero_title_2"> empieza aquí.</span>
       </h1>
-      <p class="mt-6 text-lg text-slate-600 max-w-xl leading-relaxed" data-i18n="hero_sub">
+      <p class="hero-seq mt-6 text-lg text-slate-600 max-w-xl leading-relaxed" data-i18n="hero_sub">
         Recorre los pueblos mágicos del estado con la comodidad de un viaje planeado a detalle. Choferes certificados, unidades cuidadas y la libertad de disfrutar sin pensar en el camino.
       </p>
-      <div class="mt-9 flex flex-col sm:flex-row gap-4">
+      <div class="hero-seq mt-9 flex flex-col sm:flex-row gap-4">
         <a href="https://wa.me/5213351894857" target="_blank" rel="noopener"
-           class="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-700 px-7 py-4 rounded-xl shadow-sm transition-colors">
+           class="btn-primary inline-flex items-center justify-center gap-2 bg-amber-500 text-slate-900 font-700 px-7 py-4 rounded-xl shadow-sm">
           <i data-lucide="message-circle" class="w-5 h-5"></i>
           <span data-i18n="hero_cta1">Arma tu viaje</span>
         </a>
         <a href="#destinos"
-           class="inline-flex items-center justify-center gap-2 border border-slate-300 hover:border-slate-900 text-slate-800 font-700 px-7 py-4 rounded-xl transition-colors">
+           class="btn-secondary inline-flex items-center justify-center gap-2 border border-slate-300 hover:border-slate-900 text-slate-800 font-700 px-7 py-4 rounded-xl">
           <span data-i18n="hero_cta2">Ver destinos</span>
           <i data-lucide="arrow-right" class="w-5 h-5"></i>
         </a>
       </div>
-      <div class="mt-10 flex items-center gap-8 text-sm">
+      <div class="hero-seq mt-10 flex items-center gap-8 text-sm">
         <div>
-          <p class="font-display font-700 text-2xl text-slate-900">+8</p>
+          <p class="font-display font-700 text-2xl text-slate-900"><span class="stat-num" data-target="8" data-prefix="+" data-suffix="">+8</span></p>
           <p class="text-slate-500" data-i18n="hero_stat1">Años recorriendo Jalisco</p>
         </div>
         <div class="h-10 w-px bg-slate-200"></div>
         <div>
-          <p class="font-display font-700 text-2xl text-slate-900">5.0★</p>
+          <p class="font-display font-700 text-2xl text-slate-900"><span class="stat-num" data-target="5" data-prefix="" data-suffix=".0★">5.0★</span></p>
           <p class="text-slate-500" data-i18n="hero_stat2">Calificación de viajeros</p>
         </div>
       </div>
     </div>
 
     <!-- Hero image placeholder -->
-    <div class="reveal">
+    <div class="hero-img-seq">
       <div class="relative aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] rounded-2xl overflow-hidden shadow-sm
                   bg-gradient-to-br from-amber-200 via-amber-100 to-yellow-50 ring-1 ring-amber-500/10">
         <div class="absolute inset-0 flex flex-col items-center justify-center text-amber-700/70">
           <i data-lucide="image" class="w-12 h-12 mb-3"></i>
           <p class="text-sm font-600" data-i18n="hero_ph">Fotografía principal · Paisaje de Jalisco</p>
         </div>
-        <div class="absolute bottom-5 left-5 right-5 bg-white rounded-xl shadow-sm p-4 flex items-center gap-3">
+        <div class="float-card absolute bottom-5 left-5 right-5 bg-white rounded-xl shadow-sm p-4 flex items-center gap-3">
           <span class="grid place-items-center w-11 h-11 rounded-xl bg-amber-500 text-slate-900">
             <i data-lucide="users" class="w-5 h-5"></i>
           </span>
@@ -162,9 +286,9 @@ tailwind.config = {
       <p class="mt-4 text-slate-600 text-lg" data-i18n="dest_sub">Cada salida está pensada para que aproveches el día sin prisas: transporte, ruta y paradas resueltas.</p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-stagger>
       <!-- Tequila -->
-      <article class="reveal group rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+      <article class="reveal dest-card group rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm overflow-hidden">
         <div class="relative aspect-[4/3] bg-gradient-to-br from-amber-300 to-yellow-100 overflow-hidden">
           <div class="absolute inset-0 grid place-items-center text-amber-700/60 group-hover:scale-105 transition-transform duration-500">
             <i data-lucide="wine" class="w-12 h-12"></i>
@@ -177,7 +301,7 @@ tailwind.config = {
       </article>
 
       <!-- Chapala -->
-      <article class="reveal group rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+      <article class="reveal dest-card group rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm overflow-hidden">
         <div class="relative aspect-[4/3] bg-gradient-to-br from-amber-200 to-yellow-50 overflow-hidden">
           <div class="absolute inset-0 grid place-items-center text-amber-700/60 group-hover:scale-105 transition-transform duration-500">
             <i data-lucide="waves" class="w-12 h-12"></i>
@@ -190,7 +314,7 @@ tailwind.config = {
       </article>
 
       <!-- Mazamitla -->
-      <article class="reveal group rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+      <article class="reveal dest-card group rounded-2xl bg-white ring-1 ring-slate-900/5 shadow-sm overflow-hidden">
         <div class="relative aspect-[4/3] bg-gradient-to-br from-amber-300 to-yellow-100 overflow-hidden">
           <div class="absolute inset-0 grid place-items-center text-amber-700/60 group-hover:scale-105 transition-transform duration-500">
             <i data-lucide="trees" class="w-12 h-12"></i>
@@ -214,18 +338,18 @@ tailwind.config = {
         <h2 class="mt-3 font-display font-700 text-3xl sm:text-4xl tracking-tight" data-i18n="vans_title">Tu propio viaje, a tu ritmo y con respaldo</h2>
         <p class="mt-4 text-slate-300 text-lg leading-relaxed" data-i18n="vans_sub">Para escapadas particulares, traslados corporativos o eventos especiales. Unidades cómodas con chofer profesional para que solo te preocupes por disfrutar.</p>
 
-        <div class="mt-8 grid sm:grid-cols-3 gap-5">
-          <div class="rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
+        <div class="mt-8 grid sm:grid-cols-3 gap-5" data-stagger>
+          <div class="reveal feat-card rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
             <i data-lucide="shield-check" class="w-7 h-7 text-amber-400"></i>
             <p class="mt-3 font-700 text-sm" data-i18n="vans_f1_t">Viaje seguro</p>
             <p class="mt-1 text-xs text-slate-400" data-i18n="vans_f1_s">Unidades en mantenimiento constante y con seguro de viajero.</p>
           </div>
-          <div class="rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
+          <div class="reveal feat-card rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
             <i data-lucide="user-check" class="w-7 h-7 text-amber-400"></i>
             <p class="mt-3 font-700 text-sm" data-i18n="vans_f2_t">Chofer certificado</p>
             <p class="mt-1 text-xs text-slate-400" data-i18n="vans_f2_s">Conductores con experiencia y licencia federal vigente.</p>
           </div>
-          <div class="rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
+          <div class="reveal feat-card rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
             <i data-lucide="armchair" class="w-7 h-7 text-amber-400"></i>
             <p class="mt-3 font-700 text-sm" data-i18n="vans_f3_t">Máximo confort</p>
             <p class="mt-1 text-xs text-slate-400" data-i18n="vans_f3_s">Clima, asientos amplios y espacio de equipaje para el grupo.</p>
@@ -233,7 +357,7 @@ tailwind.config = {
         </div>
 
         <a href="https://wa.me/5213351894857" target="_blank" rel="noopener"
-           class="mt-9 inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-700 px-7 py-4 rounded-xl transition-colors">
+           class="btn-primary mt-9 inline-flex items-center gap-2 bg-amber-500 text-slate-900 font-700 px-7 py-4 rounded-xl">
           <i data-lucide="message-circle" class="w-5 h-5"></i>
           <span data-i18n="vans_cta">Cotizar mi camioneta</span>
         </a>
@@ -264,32 +388,15 @@ tailwind.config = {
     </div>
 
     <!-- 8 photo placeholders -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-      <!-- repeated 8 -->
-      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
-        <i data-lucide="image" class="w-8 h-8"></i>
-      </div>
-      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
-        <i data-lucide="image" class="w-8 h-8"></i>
-      </div>
-      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
-        <i data-lucide="image" class="w-8 h-8"></i>
-      </div>
-      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
-        <i data-lucide="image" class="w-8 h-8"></i>
-      </div>
-      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
-        <i data-lucide="image" class="w-8 h-8"></i>
-      </div>
-      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
-        <i data-lucide="image" class="w-8 h-8"></i>
-      </div>
-      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
-        <i data-lucide="image" class="w-8 h-8"></i>
-      </div>
-      <div class="reveal aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400 hover:from-amber-100 hover:to-amber-50 transition-colors">
-        <i data-lucide="image" class="w-8 h-8"></i>
-      </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" data-stagger>
+      <div class="reveal gallery-item aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400"><i data-lucide="image" class="w-8 h-8"></i></div>
+      <div class="reveal gallery-item aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400"><i data-lucide="image" class="w-8 h-8"></i></div>
+      <div class="reveal gallery-item aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400"><i data-lucide="image" class="w-8 h-8"></i></div>
+      <div class="reveal gallery-item aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400"><i data-lucide="image" class="w-8 h-8"></i></div>
+      <div class="reveal gallery-item aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400"><i data-lucide="image" class="w-8 h-8"></i></div>
+      <div class="reveal gallery-item aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400"><i data-lucide="image" class="w-8 h-8"></i></div>
+      <div class="reveal gallery-item aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400"><i data-lucide="image" class="w-8 h-8"></i></div>
+      <div class="reveal gallery-item aspect-square rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 ring-1 ring-slate-900/5 grid place-items-center text-slate-400"><i data-lucide="image" class="w-8 h-8"></i></div>
     </div>
 
     <!-- 3 video placeholders -->
@@ -334,8 +441,8 @@ tailwind.config = {
       <h2 class="mt-3 font-display font-700 text-3xl sm:text-4xl tracking-tight" data-i18n="rev_title">Viajeros que repetirían sin dudarlo</h2>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6">
-      <article class="reveal rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-7 bg-sand">
+    <div class="grid md:grid-cols-3 gap-6" data-stagger>
+      <article class="reveal rev-card rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-7 bg-sand">
         <div class="flex gap-1 text-amber-500 mb-4">
           <i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i>
         </div>
@@ -349,7 +456,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="reveal rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-7 bg-sand">
+      <article class="reveal rev-card rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-7 bg-sand">
         <div class="flex gap-1 text-amber-500 mb-4">
           <i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i>
         </div>
@@ -363,7 +470,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="reveal rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-7 bg-sand">
+      <article class="reveal rev-card rounded-2xl ring-1 ring-slate-900/5 shadow-sm p-7 bg-sand">
         <div class="flex gap-1 text-amber-500 mb-4">
           <i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i>
         </div>
@@ -380,7 +487,7 @@ tailwind.config = {
 
     <div class="reveal mt-10 text-center">
       <a href="https://www.facebook.com/AnheloToursGD/reviews/" target="_blank" rel="noopener"
-         class="inline-flex items-center gap-2 border-2 border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-700 px-7 py-4 rounded-xl transition-colors">
+         class="btn-secondary inline-flex items-center gap-2 border-2 border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-700 px-7 py-4 rounded-xl transition-colors">
         <i data-lucide="facebook" class="w-5 h-5"></i>
         <span data-i18n="rev_cta">Ver todas las reseñas en Facebook</span>
       </a>
@@ -510,7 +617,7 @@ tailwind.config = {
 
 <!-- ============ FLOATING WHATSAPP ============ -->
 <a href="https://wa.me/5213351894857" target="_blank" rel="noopener" aria-label="WhatsApp"
-   class="fixed bottom-5 right-5 z-50 grid place-items-center w-14 h-14 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-900 shadow-lg transition-colors">
+   class="wa-pulse fixed bottom-5 right-5 z-50 grid place-items-center w-14 h-14 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-900 shadow-lg transition-colors hover:scale-110 transition-transform duration-200">
   <i data-lucide="message-circle" class="w-7 h-7"></i>
 </a>
 
@@ -527,11 +634,57 @@ tailwind.config = {
   menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
   mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
 
-  // Scroll reveal
+  // Navbar scroll state
+  const header = document.querySelector('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Staggered scroll reveal
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const el = e.target;
+        const delay = parseInt(el.dataset.revealDelay || '0');
+        setTimeout(() => el.classList.add('in'), delay);
+        io.unobserve(el);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    const staggerParent = el.closest('[data-stagger]');
+    if (staggerParent) {
+      const siblings = Array.from(staggerParent.querySelectorAll('.reveal'));
+      const idx = siblings.indexOf(el);
+      el.dataset.revealDelay = idx * 110;
+    }
+    io.observe(el);
+  });
+
+  // Stat count-up
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseFloat(el.dataset.target);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const isFloat = !Number.isInteger(target);
+      const duration = 1200;
+      const start = performance.now();
+      const animate = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        const val = isFloat ? (target * eased).toFixed(1) : Math.round(target * eased);
+        el.textContent = prefix + val + suffix;
+        if (progress < 1) requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+      statObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-num').forEach(el => statObserver.observe(el));
 
   // Form (demo)
   document.getElementById('f-submit').addEventListener('click', () => {
